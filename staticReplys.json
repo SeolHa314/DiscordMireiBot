@@ -13,5 +13,8 @@
     },
     "테스트": {
         "reply": "이거 난수나옴 잘 봐라 -> ${rand 1 10}"
+    },
+    "test1": {
+        "reply": "Supports also english"
     }
 }
