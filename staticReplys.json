@@ -14,7 +14,14 @@
     "테스트": {
         "reply": "이거 난수나옴 잘 봐라 -> ${rand 1 10}"
     },
+    "테스트2": {
+        "reply": "일천: ${rand 1 1000} 일만: ${rand 1 10000}"
+    },
     "test1": {
         "reply": "Supports also english"
+    },
+    "doya": {
+        "reply": "도야~",
+        "image": "./images/mireidoya.jpeg"
     }
 }

@@ -29,9 +29,9 @@ async def asyncDereInfoSend(message, userID):
     async with aiohttp.ClientSession() as session:
         async with session.get("https://deresute.me/{}/json".format(userID)) as resp:
             userData = await resp.json()
-            if "api_error" in userData.keys():
+            if "api_error" in userData:
                 await message.channel.send("api error : " + str(userData["api_error"]))
-            elif "name" in userData.keys():
+            elif "name" in userData:
                 await message.channel.send(userData["name"] + " " + str(userData["level"]) + " " + userData["comment"])
             else:
                 await message.channel.send("Wrong response. Contact developer.")
@@ -55,17 +55,26 @@ class discordClient(discord.Client):
             # CGSS user info
             elif splitedMessage[1] == "info":
                 # Process game info asyncronously to prevent programme from hogging
-                await asyncDereInfoSend(message, splitedMessage[2])
+                async with message.channel.typing():
+                    await asyncDereInfoSend(message, splitedMessage[2])
             else:
-                if splitedMessage[1] in staticReplys.keys():
-                    await message.channel.send(parseReplys(staticReplys[splitedMessage[1]]["reply"]))
+                if splitedMessage[1] in staticReplys:
+                    if "image" in staticReplys[splitedMessage[1]]:
+                        await message.channel.send(content = parseReplys(staticReplys[splitedMessage[1]]["reply"]),
+                                                   file = discord.File(staticReplys[splitedMessage[1]]["image"]))
+                    else:
+                        await message.channel.send(parseReplys(staticReplys[splitedMessage[1]]["reply"]))
                 else:
                     await message.channel.send("그런 거 없다")
 
-       
-with open("./staticReplys.json", 'r') as file:
-    staticReplys = json.load(file)
-    file.close()
+try:
+    with open("./staticReplys.json", 'r') as file:
+        staticReplys = json.load(file)
+        file.close()
+except FileNotFoundError:
+    print("Need to make staticReplys.json")
+    raise SystemExit()
+    
 
 bot = discordClient()
 bot.run(os.environ["DISCORDBOT_TOKEN"])
